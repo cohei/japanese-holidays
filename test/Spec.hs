@@ -30,13 +30,13 @@ main = hspec $ do
         , (2015,  5,  5, Children'sDay)
         , (2015,  7, 20, MarineDay)
         , (2015,  9, 21, RespectForTheAgedDay)
-        , (2015,  9, 22, PublicHoliday)
+        , (2015,  9, 22, NationalHoliday)
         , (2015,  9, 23, AutumnalEquinoxDay)
-        , (2015, 10, 12, HealthSportsDay)
+        , (2015, 10, 12, HealthAndSportsDay)
         , (2015, 11,  3, CultureDay)
         , (2015, 11, 23, LabourThanksgivingDay)
         , (2015, 12, 23, Emperor'sBirthday)
-        , (2009,  5,  6, SubstituteHoliday)
+        , (2009,  5,  6, MakeUpHoliday)
         , (2016,  8, 11, MountainDay)
         ]
 
