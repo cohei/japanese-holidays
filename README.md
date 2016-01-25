@@ -1,8 +1,8 @@
 # Japanese Holidays
 
-日本の祝日を判定します。 http://www.h3.dion.ne.jp/%7Esakatsu/holiday_logic.htm を Haskell へ移植しました。
+ある日付が、どの日本の祝日にあたるかを判定します。 http://www.h3.dion.ne.jp/%7Esakatsu/holiday_logic.htm を Haskell へ移植しました。
 
-This library is for determining Japanese holidays and is the translation to Haskell from http://www.h3.dion.ne.jp/%7Esakatsu/holiday_logic.htm.
+This library, which is translated from http://www.h3.dion.ne.jp/%7Esakatsu/holiday_logic.htm to Haskell, identifies Japanese holidays.
 
 ## 著作権表示 Copyright
 
