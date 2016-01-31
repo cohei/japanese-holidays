@@ -33,6 +33,7 @@ test-suite hspec
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
+  other-modules:       Data.Time.Calendar.Holiday.JapaneseSpec
   build-depends:       base
                      , japanese-holidays
                      , time == 1.5.*
