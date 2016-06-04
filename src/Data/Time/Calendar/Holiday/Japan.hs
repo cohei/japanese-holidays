@@ -71,7 +71,7 @@ data Holiday
   | CeremonialOfPrinceNaruhito'sMarriage
   deriving (Eq, Show)
 
--- | Returns Japanese name of holidays.
+-- | Return Japanese name of @Holiday@s.
 toJapanese :: Holiday -> String
 toJapanese NewYear'sDay                         = "元日"
 toJapanese ComingOfAgeDay                       = "成人の日"
@@ -96,7 +96,7 @@ toJapanese RitesOfShowaEmperorFuneral           = "昭和天皇の大喪の礼"
 toJapanese CeremonialOfPrinceAkihito'sMarriage  = "皇太子明仁親王の結婚の儀"
 toJapanese CeremonialOfPrinceNaruhito'sMarriage = "皇太子徳仁親王の結婚の儀"
 
--- | Determine which holiday the day is if possible.
+-- | Identify which holiday the day is if possible.
 --
 -- >>> putStrLn $ toJapanese $ Data.Maybe.fromJust $ holiday $ fromGregorian 2015 5 5
 -- こどもの日
@@ -162,6 +162,6 @@ holiday day =
   _ | isMonday day && isHoliday (addDays (-1) day) -> Just MakeUpHoliday
   _ -> Nothing
 
--- | The day is a holiday or not.
+-- | Identify if The day is a holiday or not.
 isHoliday :: Day -> Bool
 isHoliday = isJust . holiday
