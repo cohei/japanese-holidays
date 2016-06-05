@@ -1,5 +1,7 @@
 # Japanese Holidays
 
+[![CircleCI](https://circleci.com/gh/cohei/japanese-holidays.svg?style=svg)](https://circleci.com/gh/cohei/japanese-holidays)
+
 ある日付が、どの日本の祝日にあたるかを判定します。 http://www.h3.dion.ne.jp/%7Esakatsu/holiday_logic.htm を Haskell へ移植しました。
 
 This library, which is translated from http://www.h3.dion.ne.jp/%7Esakatsu/holiday_logic.htm to Haskell, identifies Japanese holidays.
