@@ -162,6 +162,6 @@ holiday day =
   _ | isMonday day && isHoliday (addDays (-1) day) -> Just MakeUpHoliday
   _ -> Nothing
 
--- | Identify if The day is a holiday or not.
+-- | Identify if the day is a holiday or not.
 isHoliday :: Day -> Bool
 isHoliday = isJust . holiday
