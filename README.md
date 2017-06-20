@@ -1,6 +1,7 @@
 # Japanese Holidays
 
 [![CircleCI](https://circleci.com/gh/cohei/japanese-holidays.svg?style=svg)](https://circleci.com/gh/cohei/japanese-holidays)
+[![Hackage](https://img.shields.io/hackage/v/japanese-holidays.svg)](https://hackage.haskell.org/package/japanese-holidays)
 
 ある日付が、どの日本の祝日にあたるかを判定します。 [AddinBox / 祝日判定ロジック](http://addinbox.sakura.ne.jp/holiday_logic.htm) を Haskell へ移植しました。
 
