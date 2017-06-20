@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    working_directory: "~/work"
+    docker:
+      - image: fpco/stack-build:lts-8.19
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - libraries
+      - run: stack setup
+      - run: stack build --test --only-dependencies
+      - save_cache:
+          key: libraries
+          paths:
+            - "~/.stack"
+      - run: stack test
