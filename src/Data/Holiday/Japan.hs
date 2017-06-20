@@ -1,6 +1,6 @@
 {-# LANGUAGE MultiWayIf #-}
 
-module Data.Time.Calendar.Holiday.Japan
+module Data.Holiday.Japan
   ( Holiday(..)
   , toJapanese
   , holiday

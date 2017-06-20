@@ -1,6 +1,6 @@
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-module Data.Time.Calendar.Holiday.JapaneseSpec (spec) where
+module Data.Holiday.JapanSpec (spec) where
 
 import Data.Foldable (for_)
 import Data.Maybe (isJust, isNothing)
@@ -8,7 +8,7 @@ import Data.Time.Calendar
 import Test.Hspec
 import Test.QuickCheck
 
-import Data.Time.Calendar.Holiday.Japan
+import Data.Holiday.Japan
 
 deriving instance Arbitrary Day
 
