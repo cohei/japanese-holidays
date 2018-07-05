@@ -7,10 +7,9 @@ import Data.Maybe (isJust, isNothing)
 import Data.Time.Calendar
 import Test.Hspec
 import Test.QuickCheck
+import Test.QuickCheck.Instances.Time ()
 
 import Data.Holiday.Japan
-
-deriving instance Arbitrary Day
 
 spec :: Spec
 spec = do
