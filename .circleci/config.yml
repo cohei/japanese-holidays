@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: "~/work"
     docker:
-      - image: fpco/stack-build:lts-8.19
+      - image: fpco/stack-build:lts-11.16
     steps:
       - checkout
       - restore_cache:
