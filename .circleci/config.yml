@@ -8,11 +8,13 @@ jobs:
       - checkout
       - restore_cache:
           keys:
+            - libraries-{{ checksum "stack.yaml" }}-{{ checksum "japanese-holidays.cabal" }}
+            - libraries-{{ checksum "stack.yaml" }}
             - libraries
       - run: stack setup
       - run: stack build --test --only-dependencies
       - save_cache:
-          key: libraries
+          key: libraries-{{ checksum "stack.yaml" }}-{{ checksum "japanese-holidays.cabal" }}
           paths:
             - "~/.stack"
       - run: stack test
