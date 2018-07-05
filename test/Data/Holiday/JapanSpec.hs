@@ -12,7 +12,7 @@ import Test.QuickCheck.Instances.Time ()
 import Data.Holiday.Japan
 
 spec :: Spec
-spec = do
+spec = parallel $ do
   describe "holiday" $ do
     it "returns `Maybe` values" $ do
       property $ (\h -> isJust h || isNothing h) . holiday
