@@ -53,3 +53,9 @@ spec = parallel $ do
         holiday (fromGregorian 2019 2 23) `shouldBe` Nothing
       it "2020/2/23 is Emperor's Birthday" $ do
         holiday (fromGregorian 2020 2 23) `shouldBe` Just Emperor'sBirthday
+
+    describe "Health and Sports Day is turend into Sports Day from 2020" $ do
+      it "2019/10/14 is Health and Sports Day" $ do
+        holiday (fromGregorian 2019 10 14) `shouldBe` Just HealthAndSportsDay
+      it "2020/10/12 is Sports Day" $ do
+        holiday (fromGregorian 2020 10 12) `shouldBe` Just SportsDay

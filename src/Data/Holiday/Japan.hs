@@ -60,6 +60,7 @@ data Holiday
   | RespectForTheAgedDay
   | AutumnalEquinoxDay
   | HealthAndSportsDay
+  | SportsDay
   | CultureDay
   | LabourThanksgivingDay
   | Emperor'sBirthday
@@ -86,6 +87,7 @@ toJapanese MountainDay                          = "山の日"
 toJapanese RespectForTheAgedDay                 = "敬老の日"
 toJapanese AutumnalEquinoxDay                   = "秋分の日"
 toJapanese HealthAndSportsDay                   = "体育の日"
+toJapanese SportsDay                            = "スポーツの日"
 toJapanese CultureDay                           = "文化の日"
 toJapanese LabourThanksgivingDay                = "勤労感謝の日"
 toJapanese Emperor'sBirthday                    = "天皇誕生日"
@@ -153,7 +155,8 @@ holiday day =
                             then Just RespectForTheAgedDay
                             else Nothing
   (y, 10, _)
-    | y >= 2000 && isNthWeekOfMonth 2 && isMonday day -> Just HealthAndSportsDay
+    | y >= 2000 && isNthWeekOfMonth 2 && isMonday day ->
+      Just $ if y >= 2020 then SportsDay else HealthAndSportsDay
   (y, 10, 10)
     | y >= 1966 -> Just HealthAndSportsDay
   (_, 11, 3) -> Just CultureDay
