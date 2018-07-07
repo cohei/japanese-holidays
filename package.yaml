@@ -1,0 +1,36 @@
+name: japanese-holidays
+version: 0.1.1.0
+synopsis: Japanese holidays utility
+description: Please see README.md
+category: Time
+author: TANIGUCHI Kohei
+maintainer: a.d.xvii.kal.mai@gmail.com
+copyright: 2015 TANIGUCHI Kohei
+license: BSD3
+extra-source-files: README.md
+github: cohei/japanese-holidays
+library:
+  source-dirs: src
+  dependencies:
+    - base >= 4.7 && < 5
+    - time >= 1.6 && < 1.9
+tests:
+  doctest:
+    source-dirs: test
+    main: doctest.hs
+    other-modules: []
+    dependencies:
+      - base
+      - doctest >= 0.8
+    ghc-options: -threaded -rtsopts
+  hspec:
+    source-dirs: test
+    main: Spec.hs
+    dependencies:
+      - base
+      - japanese-holidays
+      - time >= 1.6 && < 1.9
+      - hspec
+      - QuickCheck
+      - quickcheck-instances
+    ghc-options: -threaded -rtsopts -with-rtsopts=-N
