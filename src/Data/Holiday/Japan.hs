@@ -112,7 +112,7 @@ holiday day =
   in case (y', m', d') of
   (_, 1, 1) -> Just NewYear'sDay
   (y, 1, _)
-    | y >= 2000 -> if isNthWeekOfMonth 2 && isMonday day then Just ComingOfAgeDay else Nothing
+    | y >= 2000 && isNthWeekOfMonth 2 && isMonday day -> Just ComingOfAgeDay
   (_, 1, 15) -> Just ComingOfAgeDay
   (y, 2, 11)
     | y >= 1967 -> Just NationalFoundationDay
@@ -133,7 +133,7 @@ holiday day =
     | y >= 2007 && (isTuesday day || isWednesday day) -> Just MakeUpHoliday
   (1993, 6, 9) -> Just CeremonialOfPrinceNaruhito'sMarriage
   (y, 7, _)
-    | y >= 2003 -> if isNthWeekOfMonth 3 && isMonday day then Just MarineDay else Nothing
+    | y >= 2003 && isNthWeekOfMonth 3 && isMonday day -> Just MarineDay
   (y, 7, 20)
     | y >= 1996 -> Just MarineDay
   (y, 8, 11)
@@ -151,7 +151,7 @@ holiday day =
                             then Just RespectForTheAgedDay
                             else Nothing
   (y, 10, _)
-    | y >= 2000 -> if isNthWeekOfMonth 2 && isMonday day then Just HealthAndSportsDay else Nothing
+    | y >= 2000 && isNthWeekOfMonth 2 && isMonday day -> Just HealthAndSportsDay
   (y, 10, 10)
     | y >= 1966 -> Just HealthAndSportsDay
   (_, 11, 3) -> Just CultureDay
