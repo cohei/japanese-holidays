@@ -108,11 +108,11 @@ holiday day | day < enforcement = Nothing
 holiday day =
   let
     (y', m', d') = toGregorian day
-    weekOfMonth = (d' - 1) `div` 7  -- zero-based
+    weekOfMonth = (d' - 1) `div` 7 + 1
   in case (y', m', d') of
   (_, 1, 1) -> Just NewYear'sDay
   (y, 1, _)
-    | y >= 2000 -> if weekOfMonth == 1 && isMonday day then Just ComingOfAgeDay else Nothing
+    | y >= 2000 -> if weekOfMonth == 2 && isMonday day then Just ComingOfAgeDay else Nothing
   (_, 1, 15) -> Just ComingOfAgeDay
   (y, 2, 11)
     | y >= 1967 -> Just NationalFoundationDay
@@ -133,7 +133,7 @@ holiday day =
     | y >= 2007 && (isTuesday day || isWednesday day) -> Just MakeUpHoliday
   (1993, 6, 9) -> Just CeremonialOfPrinceNaruhito'sMarriage
   (y, 7, _)
-    | y >= 2003 -> if weekOfMonth == 2 && isMonday day then Just MarineDay else Nothing
+    | y >= 2003 -> if weekOfMonth == 3 && isMonday day then Just MarineDay else Nothing
   (y, 7, 20)
     | y >= 1996 -> Just MarineDay
   (y, 8, 11)
@@ -142,7 +142,7 @@ holiday day =
                in if d == equinox
                   then Just AutumnalEquinoxDay
                   else if y >= 2003
-                       then if weekOfMonth == 2 && isMonday day
+                       then if weekOfMonth == 3 && isMonday day
                             then Just RespectForTheAgedDay
                             else if isTuesday day && d == equinox - 1
                                  then Just NationalHoliday
@@ -151,7 +151,7 @@ holiday day =
                             then Just RespectForTheAgedDay
                             else Nothing
   (y, 10, _)
-    | y >= 2000 -> if weekOfMonth == 1 && isMonday day then Just HealthAndSportsDay else Nothing
+    | y >= 2000 -> if weekOfMonth == 2 && isMonday day then Just HealthAndSportsDay else Nothing
   (y, 10, 10)
     | y >= 1966 -> Just HealthAndSportsDay
   (_, 11, 3) -> Just CultureDay
