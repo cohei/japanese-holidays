@@ -1,5 +1,3 @@
-{-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Data.Holiday.JapanSpec (spec) where
 
 import Data.Foldable (for_)
