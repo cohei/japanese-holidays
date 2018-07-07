@@ -43,3 +43,13 @@ spec = parallel $ do
 
     it "returns Nothing for 2015/9/15" $ do
       holiday (fromGregorian 2015 9 15) `shouldBe` Nothing
+
+    describe "New Emperor's Birthday" $ do
+      it "2018/12/23 is Emperor's Birthday" $ do
+        holiday (fromGregorian 2018 12 23) `shouldBe` Just Emperor'sBirthday
+      it "2019/12/23 is not Emperor's Birthday" $ do
+        holiday (fromGregorian 2019 12 23) `shouldBe` Nothing
+      it "2019/2/23 is not Emperor's Birthday" $ do
+        holiday (fromGregorian 2019 2 23) `shouldBe` Nothing
+      it "2020/2/23 is Emperor's Birthday" $ do
+        holiday (fromGregorian 2020 2 23) `shouldBe` Just Emperor'sBirthday

@@ -116,6 +116,8 @@ holiday day =
   (_, 1, 15) -> Just ComingOfAgeDay
   (y, 2, 11)
     | y >= 1967 -> Just NationalFoundationDay
+  (y, 2, 23)
+    | y >= 2020 -> Just Emperor'sBirthday
   (1989, 2, 24) -> Just RitesOfShowaEmperorFuneral
   (y, 3, d)
     | d == vernalEquinox y -> Just VernalEquinoxDay
@@ -158,7 +160,7 @@ holiday day =
   (_, 11, 23) -> Just LabourThanksgivingDay
   (1990, 11, 12) -> Just CeremonialOfEnthronement
   (y, 12, 23)
-    | y >= 1989 -> Just Emperor'sBirthday
+    | y >= 1989 && y <= 2018 -> Just Emperor'sBirthday
   _ | isMonday day && isHoliday (addDays (-1) day) -> Just MakeUpHoliday
   _ -> Nothing
 
