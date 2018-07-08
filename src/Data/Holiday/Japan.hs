@@ -136,10 +136,15 @@ holiday day =
   (y, 5, 6)
     | y >= 2007 && (isTuesday day || isWednesday day) -> Just MakeUpHoliday
   (1993, 6, 9) -> Just CeremonialOfPrinceNaruhito'sMarriage
+  (2020, 7, 23) -> Just MarineDay
+  (2020, 7, 24) -> Just SportsDay
+  (2020, 7, _) -> Nothing
   (y, 7, _)
     | y >= 2003 && isNthWeekOfMonth 3 && isMonday day -> Just MarineDay
   (y, 7, 20)
     | y >= 1996 -> Just MarineDay
+  (2020, 8, 10) -> Just MountainDay
+  (2020, 8, _) -> Nothing
   (y, 8, 11)
     | y >= 2016 -> Just MountainDay
   (y, 9, d) -> let equinox = autumnalEquinox y
@@ -155,8 +160,10 @@ holiday day =
                             then Just RespectForTheAgedDay
                             else Nothing
   (y, 10, _)
-    | y >= 2000 && isNthWeekOfMonth 2 && isMonday day ->
-      Just $ if y >= 2020 then SportsDay else HealthAndSportsDay
+    | y >= 2000 && isNthWeekOfMonth 2 && isMonday day -> if
+      | y == 2020 -> Nothing
+      | y >= 2020 -> Just SportsDay
+      | otherwise -> Just HealthAndSportsDay
   (y, 10, 10)
     | y >= 1966 -> Just HealthAndSportsDay
   (_, 11, 3) -> Just CultureDay

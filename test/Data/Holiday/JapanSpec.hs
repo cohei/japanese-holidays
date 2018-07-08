@@ -57,5 +57,21 @@ spec = parallel $ do
     describe "Health and Sports Day is turend into Sports Day from 2020" $ do
       it "2019/10/14 is Health and Sports Day" $ do
         holiday (fromGregorian 2019 10 14) `shouldBe` Just HealthAndSportsDay
-      it "2020/10/12 is Sports Day" $ do
-        holiday (fromGregorian 2020 10 12) `shouldBe` Just SportsDay
+      it "2021/10/11 is Sports Day" $ do
+        holiday (fromGregorian 2021 10 11) `shouldBe` Just SportsDay
+
+    describe "Tokyo Olympic" $ do
+      it "2020/7/23 is Marine Day" $ do
+        holiday (fromGregorian 2020 7 23) `shouldBe` Just MarineDay
+      it "2020/7/20 is not Marine Day" $ do
+        holiday (fromGregorian 2020 7 20) `shouldBe` Nothing
+
+      it "2020/7/24 is Sports Day" $ do
+        holiday (fromGregorian 2020 7 24) `shouldBe` Just SportsDay
+      it "2020/10/12 is not Sports Day" $ do
+        holiday (fromGregorian 2020 10 12) `shouldBe` Nothing
+
+      it "2020/8/10 is Mountain Day" $ do
+        holiday (fromGregorian 2020 8 10) `shouldBe` Just MountainDay
+      it "2020/8/11 is not Mountain Day" $ do
+        holiday (fromGregorian 2020 8 11) `shouldBe` Nothing
