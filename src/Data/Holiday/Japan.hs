@@ -60,6 +60,7 @@ data Holiday
   | RespectForTheAgedDay
   | AutumnalEquinoxDay
   | HealthAndSportsDay
+  | SportsDay
   | CultureDay
   | LabourThanksgivingDay
   | Emperor'sBirthday
@@ -86,6 +87,7 @@ toJapanese MountainDay                          = "山の日"
 toJapanese RespectForTheAgedDay                 = "敬老の日"
 toJapanese AutumnalEquinoxDay                   = "秋分の日"
 toJapanese HealthAndSportsDay                   = "体育の日"
+toJapanese SportsDay                            = "スポーツの日"
 toJapanese CultureDay                           = "文化の日"
 toJapanese LabourThanksgivingDay                = "勤労感謝の日"
 toJapanese Emperor'sBirthday                    = "天皇誕生日"
@@ -116,6 +118,8 @@ holiday day =
   (_, 1, 15) -> Just ComingOfAgeDay
   (y, 2, 11)
     | y >= 1967 -> Just NationalFoundationDay
+  (y, 2, 23)
+    | y >= 2020 -> Just Emperor'sBirthday
   (1989, 2, 24) -> Just RitesOfShowaEmperorFuneral
   (y, 3, d)
     | d == vernalEquinox y -> Just VernalEquinoxDay
@@ -132,10 +136,15 @@ holiday day =
   (y, 5, 6)
     | y >= 2007 && (isTuesday day || isWednesday day) -> Just MakeUpHoliday
   (1993, 6, 9) -> Just CeremonialOfPrinceNaruhito'sMarriage
+  (2020, 7, 23) -> Just MarineDay
+  (2020, 7, 24) -> Just SportsDay
+  (2020, 7, _) -> Nothing
   (y, 7, _)
     | y >= 2003 && isNthWeekOfMonth 3 && isMonday day -> Just MarineDay
   (y, 7, 20)
     | y >= 1996 -> Just MarineDay
+  (2020, 8, 10) -> Just MountainDay
+  (2020, 8, _) -> Nothing
   (y, 8, 11)
     | y >= 2016 -> Just MountainDay
   (y, 9, d) -> let equinox = autumnalEquinox y
@@ -151,14 +160,17 @@ holiday day =
                             then Just RespectForTheAgedDay
                             else Nothing
   (y, 10, _)
-    | y >= 2000 && isNthWeekOfMonth 2 && isMonday day -> Just HealthAndSportsDay
+    | y >= 2000 && isNthWeekOfMonth 2 && isMonday day -> if
+      | y == 2020 -> Nothing
+      | y >= 2020 -> Just SportsDay
+      | otherwise -> Just HealthAndSportsDay
   (y, 10, 10)
     | y >= 1966 -> Just HealthAndSportsDay
   (_, 11, 3) -> Just CultureDay
   (_, 11, 23) -> Just LabourThanksgivingDay
   (1990, 11, 12) -> Just CeremonialOfEnthronement
   (y, 12, 23)
-    | y >= 1989 -> Just Emperor'sBirthday
+    | y >= 1989 && y <= 2018 -> Just Emperor'sBirthday
   _ | isMonday day && isHoliday (addDays (-1) day) -> Just MakeUpHoliday
   _ -> Nothing
 
