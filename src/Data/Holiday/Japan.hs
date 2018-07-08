@@ -19,6 +19,12 @@ isMonday    = (== 1) . third . toWeekDate
 isTuesday   = (== 2) . third . toWeekDate
 isWednesday = (== 3) . third . toWeekDate
 
+isNthWeekOfMonth :: Int -> Int -> Bool
+isNthWeekOfMonth n dayOfMonth = (dayOfMonth - 1) `div` 7 + 1 == n
+
+isNthMonday :: Int -> Day -> Bool
+isNthMonday n day = isMonday day && isNthWeekOfMonth n (third (toGregorian day))
+
 vernalEquinox :: Integer -> Int
 vernalEquinox year = if
   | year <= 1947 -> error "before the Act on National Holidays"
@@ -107,14 +113,10 @@ toJapanese CeremonialOfPrinceNaruhito'sMarriage = "皇太子徳仁親王の結�
 -- Nothing
 holiday :: Day -> Maybe Holiday
 holiday day | day < enforcement = Nothing
-holiday day =
-  let
-    (y', m', d') = toGregorian day
-    isNthWeekOfMonth n = (d' - 1) `div` 7 + 1 == n
-  in case (y', m', d') of
+holiday day = case toGregorian day of
   (_, 1, 1) -> Just NewYear'sDay
   (y, 1, _)
-    | y >= 2000 && isNthWeekOfMonth 2 && isMonday day -> Just ComingOfAgeDay
+    | y >= 2000 && isNthMonday 2 day -> Just ComingOfAgeDay
   (_, 1, 15) -> Just ComingOfAgeDay
   (y, 2, 11)
     | y >= 1967 -> Just NationalFoundationDay
@@ -140,7 +142,7 @@ holiday day =
   (2020, 7, 24) -> Just SportsDay
   (2020, 7, _) -> Nothing
   (y, 7, _)
-    | y >= 2003 && isNthWeekOfMonth 3 && isMonday day -> Just MarineDay
+    | y >= 2003 && isNthMonday 3 day -> Just MarineDay
   (y, 7, 20)
     | y >= 1996 -> Just MarineDay
   (2020, 8, 10) -> Just MountainDay
@@ -151,7 +153,7 @@ holiday day =
                in if d == equinox
                   then Just AutumnalEquinoxDay
                   else if y >= 2003
-                       then if isNthWeekOfMonth 3 && isMonday day
+                       then if isNthMonday 3 day
                             then Just RespectForTheAgedDay
                             else if isTuesday day && d == equinox - 1
                                  then Just NationalHoliday
@@ -160,7 +162,7 @@ holiday day =
                             then Just RespectForTheAgedDay
                             else Nothing
   (y, 10, _)
-    | y >= 2000 && isNthWeekOfMonth 2 && isMonday day -> if
+    | y >= 2000 && isNthMonday 2 day -> if
       | y == 2020 -> Nothing
       | y >= 2020 -> Just SportsDay
       | otherwise -> Just HealthAndSportsDay
