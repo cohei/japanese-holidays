@@ -75,3 +75,11 @@ spec = parallel $ do
         holiday (fromGregorian 2020 8 10) `shouldBe` Just MountainDay
       it "2020/8/11 is not Mountain Day" $ do
         holiday (fromGregorian 2020 8 11) `shouldBe` Nothing
+
+    describe "NationalHoliday" $ do
+      it "1986/5/4 is not National Holiday" $ do
+        holiday (fromGregorian 1986 5 4) `shouldBe` Nothing
+      it "1987/5/4 is not National Holiday" $ do
+        holiday (fromGregorian 1987 5 4) `shouldBe` Just MakeUpHoliday
+      it "1988/5/4 is National Holiday" $ do
+        holiday (fromGregorian 1988 5 4) `shouldBe` Just NationalHoliday

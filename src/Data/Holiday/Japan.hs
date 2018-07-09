@@ -14,10 +14,11 @@ import Data.Time.Calendar.WeekDate (toWeekDate)
 third :: (a, b, c) -> c
 third (_, _, x) = x
 
-isMonday, isTuesday, isWednesday :: Day -> Bool
+isMonday, isTuesday, isWednesday, isSunday :: Day -> Bool
 isMonday    = (== 1) . third . toWeekDate
 isTuesday   = (== 2) . third . toWeekDate
 isWednesday = (== 3) . third . toWeekDate
+isSunday    = (== 7) . third . toWeekDate
 
 isNthWeekOfMonth :: Int -> Int -> Bool
 isNthWeekOfMonth n dayOfMonth = (dayOfMonth - 1) `div` 7 + 1 == n
@@ -133,7 +134,7 @@ holiday day = case toGregorian day of
   (_, 5, 3) -> Just ConstitutionMemorialDay
   (y, 5, 4)
     | y >= 2007 -> Just GreeneryDay
-    | y >= 1986 && isMonday day -> Just NationalHoliday
+    | y >= 1986 && not (isSunday day) && not (isMonday day) -> Just NationalHoliday
   (_, 5, 5) -> Just Children'sDay
   (y, 5, 6)
     | y >= 2007 && (isTuesday day || isWednesday day) -> Just MakeUpHoliday
