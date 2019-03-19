@@ -1,5 +1,4 @@
 {-# LANGUAGE MultiWayIf #-}
-
 module Data.Holiday.Japan
   ( Holiday(..)
   , toJapanese
@@ -7,9 +6,10 @@ module Data.Holiday.Japan
   , isHoliday
   ) where
 
-import Data.Maybe (isJust)
-import Data.Time.Calendar (Day, fromGregorian, toGregorian, addDays)
-import Data.Time.Calendar.WeekDate (toWeekDate)
+import           Data.Maybe                  (isJust)
+import           Data.Time.Calendar          (Day, addDays, fromGregorian,
+                                              toGregorian)
+import           Data.Time.Calendar.WeekDate (toWeekDate)
 
 third :: (a, b, c) -> c
 third (_, _, x) = x
