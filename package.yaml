@@ -13,7 +13,7 @@ library:
   source-dirs: src
   dependencies:
     - base >= 4.7 && < 5
-    - time >= 1.6 && < 1.9
+    - time >= 1.6
 tests:
   doctest:
     source-dirs: test
@@ -26,10 +26,12 @@ tests:
   hspec:
     source-dirs: test
     main: Spec.hs
+    build-tools:
+      - hspec-discover
     dependencies:
       - base
       - japanese-holidays
-      - time >= 1.6 && < 1.9
+      - time >= 1.6
       - hspec
       - QuickCheck
       - quickcheck-instances

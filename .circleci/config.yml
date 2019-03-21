@@ -3,18 +3,16 @@ jobs:
   build:
     working_directory: "~/work"
     docker:
-      - image: fpco/stack-build:lts-13.13
+      - image: haskell:8.6.3
     steps:
       - checkout
       - restore_cache:
           keys:
-            - libraries-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}
-            - libraries-{{ checksum "stack.yaml" }}
+            - libraries-{{ checksum "package.yaml" }}
             - libraries
-      - run: stack setup
-      - run: stack build --test --only-dependencies
+      - run: cabal new-update && cabal new-install hpack
+      - run: hpack && HSPEC_OPTIONS=--color cabal new-test
       - save_cache:
-          key: libraries-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}
+          key: libraries-{{ checksum "package.yaml" }}
           paths:
-            - "~/.stack"
-      - run: stack test
+            - "~/.cabal"
