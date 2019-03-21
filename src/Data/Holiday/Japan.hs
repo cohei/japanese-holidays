@@ -11,47 +11,6 @@ import           Data.Time.Calendar          (Day, addDays, fromGregorian,
                                               toGregorian)
 import           Data.Time.Calendar.WeekDate (toWeekDate)
 
-third :: (a, b, c) -> c
-third (_, _, x) = x
-
-isMonday, isTuesday, isWednesday, isSunday :: Day -> Bool
-isMonday    = (== 1) . third . toWeekDate
-isTuesday   = (== 2) . third . toWeekDate
-isWednesday = (== 3) . third . toWeekDate
-isSunday    = (== 7) . third . toWeekDate
-
-isNthWeekOfMonth :: Int -> Int -> Bool
-isNthWeekOfMonth n dayOfMonth = (dayOfMonth - 1) `div` 7 + 1 == n
-
-isNthMonday :: Int -> Day -> Bool
-isNthMonday n day = isMonday day && isNthWeekOfMonth n (third (toGregorian day))
-
-vernalEquinox :: Integer -> Int
-vernalEquinox year = if
-  | year <= 1947 -> error "before the Act on National Holidays"
-  | year <= 1979 -> calculateEquinox year 20.8357
-  | year <= 2099 -> calculateEquinox year 20.8431
-  | year <= 2150 -> calculateEquinox year 21.8510
-  | otherwise    -> error "unknown calculation after 2151"
-
-autumnalEquinox :: Integer -> Int
-autumnalEquinox year = if
-  | year <= 1947 -> error "before the Act on National Holidays"
-  | year <= 1979 -> calculateEquinox year 23.2588
-  | year <= 2099 -> calculateEquinox year 23.2488
-  | year <= 2150 -> calculateEquinox year 24.2488
-  | otherwise    -> error "unknown calculation after 2151"
-
-calculateEquinox :: Integer -> Double -> Int
-calculateEquinox year factor =
-  floor $ factor + 0.242194 * fromIntegral year' - fromIntegral (year' `div` 4)
-  where
-    year' :: Integer
-    year' = year - 1980
-
-enforcement :: Day
-enforcement = fromGregorian 1948 7 20
-
 -- | Data type for Japanese holidays.
 data Holiday
   = NewYear'sDay
@@ -104,6 +63,10 @@ toJapanese CeremonialOfEnthronement             = "即位礼正殿の儀"
 toJapanese RitesOfShowaEmperorFuneral           = "昭和天皇の大喪の礼"
 toJapanese CeremonialOfPrinceAkihito'sMarriage  = "皇太子明仁親王の結婚の儀"
 toJapanese CeremonialOfPrinceNaruhito'sMarriage = "皇太子徳仁親王の結婚の儀"
+
+-- | Identify if the day is a holiday or not.
+isHoliday :: Day -> Bool
+isHoliday = isJust . holiday
 
 -- | Identify which holiday the day is if possible.
 --
@@ -177,6 +140,43 @@ holiday day = case toGregorian day of
   _ | isMonday day && isHoliday (addDays (-1) day) -> Just MakeUpHoliday
   _ -> Nothing
 
--- | Identify if the day is a holiday or not.
-isHoliday :: Day -> Bool
-isHoliday = isJust . holiday
+enforcement :: Day
+enforcement = fromGregorian 1948 7 20
+
+third :: (a, b, c) -> c
+third (_, _, x) = x
+
+isMonday, isTuesday, isWednesday, isSunday :: Day -> Bool
+isMonday    = (== 1) . third . toWeekDate
+isTuesday   = (== 2) . third . toWeekDate
+isWednesday = (== 3) . third . toWeekDate
+isSunday    = (== 7) . third . toWeekDate
+
+isNthWeekOfMonth :: Int -> Int -> Bool
+isNthWeekOfMonth n dayOfMonth = (dayOfMonth - 1) `div` 7 + 1 == n
+
+isNthMonday :: Int -> Day -> Bool
+isNthMonday n day = isMonday day && isNthWeekOfMonth n (third (toGregorian day))
+
+vernalEquinox :: Integer -> Int
+vernalEquinox year = if
+  | year <= 1947 -> error "before the Act on National Holidays"
+  | year <= 1979 -> calculateEquinox year 20.8357
+  | year <= 2099 -> calculateEquinox year 20.8431
+  | year <= 2150 -> calculateEquinox year 21.8510
+  | otherwise    -> error "unknown calculation after 2151"
+
+autumnalEquinox :: Integer -> Int
+autumnalEquinox year = if
+  | year <= 1947 -> error "before the Act on National Holidays"
+  | year <= 1979 -> calculateEquinox year 23.2588
+  | year <= 2099 -> calculateEquinox year 23.2488
+  | year <= 2150 -> calculateEquinox year 24.2488
+  | otherwise    -> error "unknown calculation after 2151"
+
+calculateEquinox :: Integer -> Double -> Int
+calculateEquinox year factor =
+  floor $ factor + 0.242194 * fromIntegral year' - fromIntegral (year' `div` 4)
+  where
+    year' :: Integer
+    year' = year - 1980
