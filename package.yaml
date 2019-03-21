@@ -24,11 +24,12 @@ ghc-options:
   - -Wredundant-constraints
   - -Wpartial-fields
 
+dependencies:
+  - base >= 4.7 && < 5
+  - time >= 1.6
+
 library:
   source-dirs: src
-  dependencies:
-    - base >= 4.7 && < 5
-    - time >= 1.6
 
 tests:
   doctest:
@@ -36,7 +37,6 @@ tests:
     main: doctest.hs
     other-modules: []
     dependencies:
-      - base
       - doctest >= 0.8
     ghc-options: -threaded -rtsopts
   hspec:
@@ -45,8 +45,6 @@ tests:
     build-tools:
       - hspec-discover
     dependencies:
-      - base
       - japanese-holidays
-      - time >= 1.6
       - hspec
     ghc-options: -threaded -rtsopts -with-rtsopts=-N
