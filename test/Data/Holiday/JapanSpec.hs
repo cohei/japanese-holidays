@@ -1,23 +1,16 @@
 module Data.Holiday.JapanSpec (spec) where
 
-import           Data.Foldable                  (for_)
-import           Data.List                      (intercalate)
-import           Data.Maybe                     (isJust, isNothing)
-import           Data.Time.Calendar             (fromGregorian)
-import           Test.Hspec                     (Spec, describe, it, parallel,
-                                                 shouldBe)
-import           Test.QuickCheck                (property)
-import           Test.QuickCheck.Instances.Time ()
+import           Data.Foldable      (for_)
+import           Data.List          (intercalate)
+import           Data.Time.Calendar (fromGregorian)
+import           Test.Hspec         (Spec, describe, it, parallel, shouldBe)
 
-import           Data.Holiday.Japan             (Holiday (AutumnalEquinoxDay, Children'sDay, ComingOfAgeDay, ConstitutionMemorialDay, CultureDay, Emperor'sBirthday, GreeneryDay, HealthAndSportsDay, LabourThanksgivingDay, MakeUpHoliday, MarineDay, MountainDay, NationalFoundationDay, NationalHoliday, NewYear'sDay, RespectForTheAgedDay, ShowaDay, SportsDay, VernalEquinoxDay),
-                                                 holiday)
+import           Data.Holiday.Japan (Holiday (AutumnalEquinoxDay, Children'sDay, ComingOfAgeDay, ConstitutionMemorialDay, CultureDay, Emperor'sBirthday, GreeneryDay, HealthAndSportsDay, LabourThanksgivingDay, MakeUpHoliday, MarineDay, MountainDay, NationalFoundationDay, NationalHoliday, NewYear'sDay, RespectForTheAgedDay, ShowaDay, SportsDay, VernalEquinoxDay),
+                                     holiday)
 
 spec :: Spec
 spec = parallel $ do
   describe "holiday" $ do
-    it "returns `Maybe` values" $ do
-      property $ (\h -> isJust h || isNothing h) . holiday
-
     let
       holidays :: [(Integer, Int, Int, Holiday)]
       holidays =
