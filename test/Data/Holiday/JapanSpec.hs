@@ -5,7 +5,7 @@ import           Data.List          (intercalate)
 import           Data.Time.Calendar (fromGregorian)
 import           Test.Hspec         (Spec, describe, it, parallel, shouldBe)
 
-import           Data.Holiday.Japan (Holiday (AutumnalEquinoxDay, Children'sDay, ComingOfAgeDay, ConstitutionMemorialDay, CultureDay, Emperor'sBirthday, GreeneryDay, HealthAndSportsDay, LabourThanksgivingDay, MakeUpHoliday, MarineDay, MountainDay, NationalFoundationDay, NationalHoliday, NewYear'sDay, RespectForTheAgedDay, ShowaDay, SportsDay, VernalEquinoxDay),
+import           Data.Holiday.Japan (Holiday (AutumnalEquinoxDay, Children'sDay, ComingOfAgeDay, ConstitutionMemorialDay, CultureDay, Emperor'sBirthday, EnthronementDay, GreeneryDay, HealthAndSportsDay, LabourThanksgivingDay, MakeUpHoliday, MarineDay, MountainDay, NationalFoundationDay, NationalHoliday, NewYear'sDay, RespectForTheAgedDay, ShowaDay, SportsDay, VernalEquinoxDay),
                                      holiday)
 
 spec :: Spec
@@ -84,3 +84,25 @@ spec = parallel $
         holiday (fromGregorian 1987 5 4) `shouldBe` Just MakeUpHoliday
       it "1988-05-04 is National Holiday" $
         holiday (fromGregorian 1988 5 4) `shouldBe` Just NationalHoliday
+
+    describe "Golden Week of 2019" $ do
+      it "2019-04-28 is not a holiday" $
+        holiday (fromGregorian 2019 4 28) `shouldBe` Nothing
+      it "2019-04-29 is Showa Day" $
+        holiday (fromGregorian 2019 4 29) `shouldBe` Just ShowaDay
+      it "2019-04-30 is National Holiday" $
+        holiday (fromGregorian 2019 4 30) `shouldBe` Just NationalHoliday
+      it "2019-05-01 is Enthronement Day" $
+        holiday (fromGregorian 2019 5 1) `shouldBe` Just EnthronementDay
+      it "2019-05-02 is National Holiday" $
+        holiday (fromGregorian 2019 5 2) `shouldBe` Just NationalHoliday
+      it "2019-05-03 is Constitution Memorial Day" $
+        holiday (fromGregorian 2019 5 3) `shouldBe` Just ConstitutionMemorialDay
+      it "2019-05-04 is Greenery Day" $
+        holiday (fromGregorian 2019 5 4) `shouldBe` Just GreeneryDay
+      it "2019-05-05 is Children's Day" $
+        holiday (fromGregorian 2019 5 5) `shouldBe` Just Children'sDay
+      it "2019-05-06 is Make Up Holiday" $
+        holiday (fromGregorian 2019 5 6) `shouldBe` Just MakeUpHoliday
+      it "2019-05-07 is not a holiday" $
+        holiday (fromGregorian 2019 5 7) `shouldBe` Nothing

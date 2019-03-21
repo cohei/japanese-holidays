@@ -36,6 +36,7 @@ data Holiday
   | RitesOfShowaEmperorFuneral
   | CeremonialOfPrinceAkihito'sMarriage
   | CeremonialOfPrinceNaruhito'sMarriage
+  | EnthronementDay
   deriving (Eq, Show)
 
 -- | Return Japanese name of @Holiday@s.
@@ -63,6 +64,7 @@ toJapanese CeremonialOfEnthronement             = "即位礼正殿の儀"
 toJapanese RitesOfShowaEmperorFuneral           = "昭和天皇の大喪の礼"
 toJapanese CeremonialOfPrinceAkihito'sMarriage  = "皇太子明仁親王の結婚の儀"
 toJapanese CeremonialOfPrinceNaruhito'sMarriage = "皇太子徳仁親王の結婚の儀"
+toJapanese EnthronementDay                      = "即位の日"
 
 -- | Identify if the day is a holiday or not.
 isHoliday :: Day -> Bool
@@ -89,11 +91,14 @@ holiday day = case toGregorian day of
   (1989, 2, 24) -> Just RitesOfShowaEmperorFuneral
   (y, 3, d)
     | d == vernalEquinox y -> Just VernalEquinoxDay
+  (1959, 4, 10) -> Just CeremonialOfPrinceAkihito'sMarriage
   (y, 4, 29)
     | y >= 2007 -> Just ShowaDay
     | y >= 1989 -> Just GreeneryDay
     | otherwise -> Just Emperor'sBirthday
-  (1959, 4, 10) -> Just CeremonialOfPrinceAkihito'sMarriage
+  (2019, 4, 30) -> Just NationalHoliday
+  (2019, 5, 1) -> Just EnthronementDay
+  (2019, 5, 2) -> Just NationalHoliday
   (_, 5, 3) -> Just ConstitutionMemorialDay
   (y, 5, 4)
     | y >= 2007 -> Just GreeneryDay
@@ -125,6 +130,7 @@ holiday day = case toGregorian day of
                        else if y >= 1966 && d == 15
                             then Just RespectForTheAgedDay
                             else Nothing
+  (2019, 10, 22) -> Just CeremonialOfEnthronement
   (y, 10, _)
     | y >= 2000 && isNthMonday 2 day -> if
       | y == 2020 -> Nothing
