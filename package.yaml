@@ -9,11 +9,27 @@ copyright: 2015 TANIGUCHI Kohei
 license: BSD3
 extra-source-files: README.md
 github: cohei/japanese-holidays
+
+ghc-options:
+  - -Wall
+  - -Wcompat
+  - -Wincomplete-uni-patterns
+  - -Wincomplete-record-updates
+  - -Wmonomorphism-restriction
+  - -Wmissing-local-signatures
+  - -Wmissing-export-lists
+  - -Wmissing-import-lists
+  - -Wmissing-home-modules
+  - -Widentities
+  - -Wredundant-constraints
+  - -Wpartial-fields
+
 library:
   source-dirs: src
   dependencies:
     - base >= 4.7 && < 5
     - time >= 1.6
+
 tests:
   doctest:
     source-dirs: test

@@ -9,7 +9,8 @@ import           Test.Hspec                     (Spec, describe, it, parallel,
 import           Test.QuickCheck                (property)
 import           Test.QuickCheck.Instances.Time ()
 
-import           Data.Holiday.Japan             (Holiday (..), holiday)
+import           Data.Holiday.Japan             (Holiday (AutumnalEquinoxDay, Children'sDay, ComingOfAgeDay, ConstitutionMemorialDay, CultureDay, Emperor'sBirthday, GreeneryDay, HealthAndSportsDay, LabourThanksgivingDay, MakeUpHoliday, MarineDay, MountainDay, NationalFoundationDay, NationalHoliday, NewYear'sDay, RespectForTheAgedDay, ShowaDay, SportsDay, VernalEquinoxDay),
+                                                 holiday)
 
 spec :: Spec
 spec = parallel $ do
@@ -18,6 +19,7 @@ spec = parallel $ do
       property $ (\h -> isJust h || isNothing h) . holiday
 
     let
+      holidays :: [(Integer, Int, Int, Holiday)]
       holidays =
         [ (2015,  1,  1, NewYear'sDay)
         , (2015,  1, 12, ComingOfAgeDay)
