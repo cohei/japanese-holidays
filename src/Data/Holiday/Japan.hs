@@ -165,20 +165,20 @@ isNthMonday :: Int -> Day -> Bool
 isNthMonday n day = isMonday day && isNthWeekOfMonth n (third (toGregorian day))
 
 vernalEquinox :: Integer -> Int
-vernalEquinox year = if
-  | year <= 1947 -> error "before the Act on National Holidays"
-  | year <= 1979 -> calculateEquinox year 20.8357
-  | year <= 2099 -> calculateEquinox year 20.8431
-  | year <= 2150 -> calculateEquinox year 21.8510
-  | otherwise    -> error "unknown calculation after 2151"
+vernalEquinox year
+  | year <= 1947 = error "before the Act on National Holidays"
+  | year <= 1979 = calculateEquinox year 20.8357
+  | year <= 2099 = calculateEquinox year 20.8431
+  | year <= 2150 = calculateEquinox year 21.8510
+  | otherwise    = error "unknown calculation after 2151"
 
 autumnalEquinox :: Integer -> Int
-autumnalEquinox year = if
-  | year <= 1947 -> error "before the Act on National Holidays"
-  | year <= 1979 -> calculateEquinox year 23.2588
-  | year <= 2099 -> calculateEquinox year 23.2488
-  | year <= 2150 -> calculateEquinox year 24.2488
-  | otherwise    -> error "unknown calculation after 2151"
+autumnalEquinox year
+  | year <= 1947 = error "before the Act on National Holidays"
+  | year <= 1979 = calculateEquinox year 23.2588
+  | year <= 2099 = calculateEquinox year 23.2488
+  | year <= 2150 = calculateEquinox year 24.2488
+  | otherwise    = error "unknown calculation after 2151"
 
 calculateEquinox :: Integer -> Double -> Int
 calculateEquinox year factor =
