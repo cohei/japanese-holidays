@@ -6,7 +6,10 @@ module Data.Holiday.Japan
   , isHoliday
   ) where
 
+import           Control.Monad               (join)
 import           Data.Maybe                  (isJust)
+import           Data.Monoid                 (All (All, getAll),
+                                              First (First, getFirst))
 import           Data.Time.Calendar          (Day, fromGregorian, toGregorian)
 import           Data.Time.Calendar.WeekDate (toWeekDate)
 
@@ -84,128 +87,156 @@ isHoliday = isJust . holiday
 -- >>> holiday $ fromGregorian 2015 12 8
 -- Nothing
 holiday :: Day -> Maybe Holiday
-holiday = makeUp standardHoliday
+holiday d | d < enforcement = Nothing
+holiday d = getFirst $ (standardHoliday <> makeUp) d
 
-standardHoliday :: Day -> Maybe Holiday
-standardHoliday day | day < enforcement = Nothing
-standardHoliday day = case toGregorian day of
-  (_, 1, 1) -> Just D元日
-  (y, 1, _)
-    | y >= 2000 && isNthMonday 2 day -> Just D成人の日
-  (_, 1, 15) -> Just D成人の日
-  (y, 2, 11)
-    | y >= 1967 -> Just D建国記念の日
-  (y, 2, 23)
-    | y >= 2020 -> Just D天皇誕生日
-  (1989, 2, 24) -> Just D昭和天皇の大喪の礼
-  (y, 3, d)
-    | d == vernalEquinox y -> Just D春分の日
-  (1959, 4, 10) -> Just D皇太子明仁親王の結婚の儀
-  (y, 4, 29)
-    | y >= 2007 -> Just D昭和の日
-    | y >= 1989 -> Just Dみどりの日
-    | otherwise -> Just D天皇誕生日
-  (2019, 4, 30) -> Just D国民の休日
-  (2019, 5, 1) -> Just D即位の日
-  (2019, 5, 2) -> Just D国民の休日
-  (_, 5, 3) -> Just D憲法記念日
-  (y, 5, 4)
-    | y >= 2007 -> Just Dみどりの日
-    | y >= 1986 && not (isSunday day) && not (isMonday day) -> Just D国民の休日
-  (_, 5, 5) -> Just Dこどもの日
-  (1993, 6, 9) -> Just D皇太子徳仁親王の結婚の儀
-  (2020, 7, 23) -> Just D海の日
-  (2020, 7, 24) -> Just Dスポーツの日
-  (2020, 7, _) -> Nothing
-  (y, 7, _)
-    | y >= 2003 && isNthMonday 3 day -> Just D海の日
-  (y, 7, 20)
-    | y >= 1996 -> Just D海の日
-  (2020, 8, 10) -> Just D山の日
-  (2020, 8, _) -> Nothing
-  (y, 8, 11)
-    | y >= 2016 -> Just D山の日
-  (y, 9, d) -> let equinox = autumnalEquinox y
-               in if d == equinox
-                  then Just D秋分の日
-                  else if y >= 2003
-                       then if isNthMonday 3 day
-                            then Just D敬老の日
-                            else if isTuesday day && d == equinox - 1
-                                 then Just D国民の休日
-                                 else Nothing
-                       else if y >= 1966 && d == 15
-                            then Just D敬老の日
-                            else Nothing
-  (2019, 10, 22) -> Just D即位礼正殿の儀
-  (y, 10, _)
-    | y >= 2000 && isNthMonday 2 day -> if
-      | y == 2020 -> Nothing
-      | y >= 2020 -> Just Dスポーツの日
-      | otherwise -> Just D体育の日
-  (y, 10, 10)
-    | y >= 1966 -> Just D体育の日
-  (_, 11, 3) -> Just D文化の日
-  (_, 11, 23) -> Just D勤労感謝の日
-  (1990, 11, 12) -> Just D即位礼正殿の儀
-  (y, 12, 23)
-    | y >= 1989 && y <= 2018 -> Just D天皇誕生日
-  _ -> Nothing
+enforcement :: Day
+enforcement = fromGregorian 1948 7 20
+
+type Definition = Day -> First Holiday
 
 -- |
 -- [昭和48年法律第10号 国民の祝日に関する法律の一部を改正する法律](http://www.shugiin.go.jp/Internet/itdb_housei.nsf/html/houritsu/07119730412010.htm)
 -- [平成17年法律第43号 国民の祝日に関する法律の一部を改正する法律](http://www.shugiin.go.jp/Internet/itdb_housei.nsf/html/housei/16220050520043.htm)
 -- 平成17年改正後のルールはそれ以前のルールを包含する
-makeUp :: (Day -> Maybe Holiday) -> Day -> Maybe Holiday
-makeUp holiday' day
-  | isHoliday' day                       = holiday' day
-  | day < enforcementOfMakeUpDay         = Nothing
-  | continuousPreviousSundayHolidayExist = Just D振替休日
-  | otherwise                            = Nothing
+makeUp :: Definition
+makeUp = D振替休日 @@ sinceDay enforcementOfMakeUpDay <> continuousPreviousSundayHolidayExist
   where
-    isHoliday' = isJust . holiday'
+    isStandardHoliday = isJust . getFirst . standardHoliday
     continuousPreviousSundayHolidayExist =
-      any isSunday $ takeWhile isHoliday' $ iterate pred $ pred day
-
-enforcement :: Day
-enforcement = fromGregorian 1948 7 20
+      All . any isSunday . takeWhile isStandardHoliday . iterate pred . pred
 
 enforcementOfMakeUpDay :: Day
 enforcementOfMakeUpDay = fromGregorian 1973 4 12
 
-third :: (a, b, c) -> c
-third (_, _, x) = x
+standardHoliday :: Definition
+standardHoliday =
+  mconcat
+    [ D元日 @@ month 1 <> day 1
+    , D成人の日 @@ since 2000 <> month 1 <> nth 2 monday
+    , D成人の日 @@ month 1 <> day 15
+    , D建国記念の日 @@ since 1967 <> month 2 <> day 11
+    , D昭和天皇の大喪の礼 @@ year 1989 <> month 2 <> day 24
+    , D天皇誕生日 @@ since 2020 <> month 2 <> day 23
+    , D春分の日 @@ month 3 <> vernalEquinoxDay
+    , D皇太子明仁親王の結婚の儀 @@ year 1959 <> month 4 <> day 10
+    , D昭和の日 @@ since 2007 <> month 4 <> day 29
+    , Dみどりの日 @@ since 1989 <> month 4 <> day 29
+    , D天皇誕生日 @@ month 4 <> day 29
+    , D国民の休日 @@ year 2019 <> month 4 <> day 30
+    , D即位の日 @@ year 2019 <> month 5 <> day 1
+    , D国民の休日 @@ year 2019 <> month 5 <> day 2
+    , D憲法記念日 @@ month 5 <> day 3
+    , Dみどりの日 @@ since 2007 <> month 5 <> day 4
+    , D国民の休日 @@ since 1986 <> month 5 <> day 4 <> notP sunday <> notP monday
+    , Dこどもの日 @@ month 5 <> day 5
+    , D皇太子徳仁親王の結婚の儀 @@ year 1993 <> month 6 <> day 9
+    , D海の日 @@ year 2020 <> month 7 <> day 23
+    , D海の日 @@ since 2003 <> notP (year 2020) <> month 7 <> nth 3 monday
+    , D海の日 @@ since 1996 <> notP (year 2020) <> month 7 <> day 20
+    , Dスポーツの日 @@ year 2020 <> month 7 <> day 24
+    , D山の日 @@ year 2020 <> month 8 <> day 10
+    , D山の日 @@ since 2016 <> notP (year 2020) <> month 8 <> day 11
+    , D秋分の日 @@ month 9 <> autumnalEquinoxDay
+    , D敬老の日 @@ since 2003 <> month 9 <> nth 3 monday
+    , D敬老の日 @@ since 1966 <> notP (since 2003) <> month 9 <> day 15
+    , D国民の休日 @@ tuesday <> join (day . pred . autumnalEquinox . gregorianYear)
+    , D即位礼正殿の儀 @@ year 2019 <> month 10 <> day 22
+    , Dスポーツの日 @@ since 2021 <> month 10 <> nth 2 monday
+    , D体育の日 @@ since 2000 <> notP (year 2020) <> month 10 <> nth 2 monday
+    , D体育の日 @@ since 1966 <> month 10 <> day 10
+    , D文化の日 @@ month 11 <> day 3
+    , D勤労感謝の日 @@ month 11 <> day 23
+    , D即位礼正殿の儀 @@ year 1990 <> month 11 <> day 12
+    , D天皇誕生日 @@ since 1989 <> notP (since 2019) <> month 12 <> day 23
+    ]
+
+type Predicate = Day -> All
+
+(@@) :: Holiday -> Predicate -> Definition
+h @@ p = \d -> First $ toMaybe (getAll (p d)) h
+infixr 5 @@
+
+year :: Integer -> Predicate
+year i = All . (i ==) . gregorianYear
+
+month :: Int -> Predicate
+month i = All . (i ==) . gregorianMonth
+
+day :: Int -> Predicate
+day i = All . (i ==) . gregorianDay
+
+vernalEquinoxDay :: Predicate
+vernalEquinoxDay = join $ day . vernalEquinox . gregorianYear
+
+autumnalEquinoxDay :: Predicate
+autumnalEquinoxDay = join $ day . autumnalEquinox . gregorianYear
+
+since :: Integer -> Predicate
+since y = All . (>= y) . gregorianYear
+
+sinceDay :: Day -> Predicate
+sinceDay d = All . (>= d)
+
+notP :: Predicate -> Predicate
+notP p = All . not . getAll . p
+
+sunday, monday, tuesday :: Predicate
+sunday = All . isSunday
+monday = All . isMonday
+tuesday = All . isTuesday
+
+nth :: Int -> Predicate -> Predicate
+nth n p = p <> All . isNthWeekOfMonth n . gregorianDay
+
+gregorianYear :: Day -> Integer
+gregorianYear = first3 . toGregorian
+
+gregorianMonth :: Day -> Int
+gregorianMonth = second3 . toGregorian
+
+gregorianDay :: Day -> Int
+gregorianDay = third3 . toGregorian
+
+toMaybe :: Bool -> a -> Maybe a
+toMaybe b x = if b then Just x else Nothing
+
+first3 :: (a, b, c) -> a
+first3 (x, _, _) = x
+
+second3 :: (a, b, c) -> b
+second3 (_, x, _) = x
+
+third3 :: (a, b, c) -> c
+third3 (_, _, x) = x
 
 isMonday, isTuesday, isSunday :: Day -> Bool
-isMonday  = (== 1) . third . toWeekDate
-isTuesday = (== 2) . third . toWeekDate
-isSunday  = (== 7) . third . toWeekDate
+isMonday  = (== 1) . third3 . toWeekDate
+isTuesday = (== 2) . third3 . toWeekDate
+isSunday  = (== 7) . third3 . toWeekDate
 
 isNthWeekOfMonth :: Int -> Int -> Bool
 isNthWeekOfMonth n dayOfMonth = (dayOfMonth - 1) `div` 7 + 1 == n
 
-isNthMonday :: Int -> Day -> Bool
-isNthMonday n day = isMonday day && isNthWeekOfMonth n (third (toGregorian day))
-
 vernalEquinox :: Integer -> Int
-vernalEquinox year
-  | year <= 1947 = error "before the Act on National Holidays"
-  | year <= 1979 = calculateEquinox year 20.8357
-  | year <= 2099 = calculateEquinox year 20.8431
-  | year <= 2150 = calculateEquinox year 21.8510
+vernalEquinox y
+  | y <= 1947 = error "before the Act on National Holidays"
+  | y <= 1979 = calculateEquinox y 20.8357
+  | y <= 2099 = calculateEquinox y 20.8431
+  | y <= 2150 = calculateEquinox y 21.8510
   | otherwise    = error "unknown calculation after 2151"
 
 autumnalEquinox :: Integer -> Int
-autumnalEquinox year
-  | year <= 1947 = error "before the Act on National Holidays"
-  | year <= 1979 = calculateEquinox year 23.2588
-  | year <= 2099 = calculateEquinox year 23.2488
-  | year <= 2150 = calculateEquinox year 24.2488
+autumnalEquinox y
+  | y <= 1947 = error "before the Act on National Holidays"
+  | y <= 1979 = calculateEquinox y 23.2588
+  | y <= 2099 = calculateEquinox y 23.2488
+  | y <= 2150 = calculateEquinox y 24.2488
   | otherwise    = error "unknown calculation after 2151"
 
 calculateEquinox :: Integer -> Double -> Int
-calculateEquinox year factor =
-  floor $ factor + 0.242194 * fromIntegral year' - fromIntegral (year' `div` 4)
+calculateEquinox y factor =
+  floor $ factor + 0.242194 * fromIntegral y' - fromIntegral (y' `div` 4)
   where
-    year' :: Integer
-    year' = year - 1980
+    y' :: Integer
+    y' = y - 1980

@@ -5,7 +5,7 @@ import           Data.List          (intercalate)
 import           Data.Time.Calendar (fromGregorian)
 import           Test.Hspec         (Spec, describe, it, parallel, shouldBe)
 
-import           Data.Holiday.Japan (Holiday (Dこどもの日, Dみどりの日, Dスポーツの日, D体育の日, D元日, D勤労感謝の日, D即位の日, D国民の休日, D天皇誕生日, D山の日, D建国記念の日, D憲法記念日, D成人の日, D振替休日, D敬老の日, D文化の日, D春分の日, D昭和の日, D海の日, D秋分の日),
+import           Data.Holiday.Japan (Holiday (Dこどもの日, Dみどりの日, Dスポーツの日, D体育の日, D元日, D勤労感謝の日, D即位の日, D国民の休日, D天皇誕生日, D山の日, D建国記念の日, D憲法記念日, D成人の日, D振替休日, D敬老の日, D文化の日, D春分の日, D昭和の日, D昭和天皇の大喪の礼, D海の日, D秋分の日),
                                      holiday)
 
 spec :: Spec
@@ -32,6 +32,8 @@ spec = parallel $
         , (2015, 12, 23, D天皇誕生日)
         , (2009,  5,  6, D振替休日)
         , (2016,  8, 11, D山の日)
+        , (1999,  1, 15, D成人の日)
+        , (1989,  2, 24, D昭和天皇の大喪の礼)
         ]
 
     holidays `for_` \(year, month, day, holiday') ->
@@ -125,3 +127,11 @@ spec = parallel $
         holiday (fromGregorian 1973 4 30) `shouldBe` Just D振替休日
       it "2008-05-06 is Make Up Holiday" $
         holiday (fromGregorian 2008 5 6) `shouldBe` Just D振替休日
+
+    describe "April 29" $ do
+      it "2007-04-29 is Showa Day" $
+        holiday (fromGregorian 2007 4 29) `shouldBe` Just D昭和の日
+      it "2006-04-29 is Greenery Day" $
+        holiday (fromGregorian 2006 4 29) `shouldBe` Just Dみどりの日
+      it "1988-04-29 is Emperor's Birthday" $
+        holiday (fromGregorian 1988 4 29) `shouldBe` Just D天皇誕生日
