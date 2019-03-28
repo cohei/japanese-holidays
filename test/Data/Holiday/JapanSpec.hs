@@ -80,10 +80,17 @@ spec = parallel $
     describe "NationalHoliday" $ do
       it "1986-05-04 is not National Holiday" $
         holiday (fromGregorian 1986 5 4) `shouldBe` Nothing
-      it "1987-05-04 is not National Holiday" $
+      it "1987-05-04 is National Holiday" $
         holiday (fromGregorian 1987 5 4) `shouldBe` Just D振替休日
       it "1988-05-04 is National Holiday" $
         holiday (fromGregorian 1988 5 4) `shouldBe` Just D国民の休日
+
+      it "2009-09-21 is Respect for the Aged Day" $
+        holiday (fromGregorian 2009 9 21) `shouldBe` Just D敬老の日
+      it "2009-09-22 is National Holiday" $
+        holiday (fromGregorian 2009 9 22) `shouldBe` Just D国民の休日
+      it "2009-09-23 is Autumnal Equinox" $
+        holiday (fromGregorian 2009 9 23) `shouldBe` Just D秋分の日
 
     describe "Golden Week of 2019" $ do
       it "2019-04-28 is not a holiday" $
