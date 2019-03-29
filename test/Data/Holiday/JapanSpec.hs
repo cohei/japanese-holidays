@@ -113,3 +113,15 @@ spec = parallel $
         holiday (fromGregorian 2019 5 6) `shouldBe` Just D振替休日
       it "2019-05-07 is not a holiday" $
         holiday (fromGregorian 2019 5 7) `shouldBe` Nothing
+
+    describe "Make Up Holiday" $ do
+      it "1973-02-11 is National Foundation Day" $
+        holiday (fromGregorian 1973 2 11) `shouldBe` Just D建国記念の日
+      it "1973-02-12 is not Make Up Holiday" $
+        holiday (fromGregorian 1973 2 12) `shouldBe` Nothing
+      it "1973-04-29 is Emperor's Birthday" $
+        holiday (fromGregorian 1973 4 29) `shouldBe` Just D天皇誕生日
+      it "1973-04-30 is Make Up Holiday" $
+        holiday (fromGregorian 1973 4 30) `shouldBe` Just D振替休日
+      it "2008-05-06 is Make Up Holiday" $
+        holiday (fromGregorian 2008 5 6) `shouldBe` Just D振替休日

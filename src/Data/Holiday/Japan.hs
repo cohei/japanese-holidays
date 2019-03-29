@@ -7,8 +7,7 @@ module Data.Holiday.Japan
   ) where
 
 import           Data.Maybe                  (isJust)
-import           Data.Time.Calendar          (Day, addDays, fromGregorian,
-                                              toGregorian)
+import           Data.Time.Calendar          (Day, fromGregorian, toGregorian)
 import           Data.Time.Calendar.WeekDate (toWeekDate)
 
 -- | Data type for Japanese holidays.
@@ -150,11 +149,14 @@ holiday day = case toGregorian day of
   (1990, 11, 12) -> Just D即位礼正殿の儀
   (y, 12, 23)
     | y >= 1989 && y <= 2018 -> Just D天皇誕生日
-  _ | isMonday day && isHoliday (addDays (-1) day) -> Just D振替休日
+  _ | day >= enforcementOfMakeUpDay && isMonday day && isHoliday (pred day) -> Just D振替休日
   _ -> Nothing
 
 enforcement :: Day
 enforcement = fromGregorian 1948 7 20
+
+enforcementOfMakeUpDay :: Day
+enforcementOfMakeUpDay = fromGregorian 1973 4 12
 
 third :: (a, b, c) -> c
 third (_, _, x) = x
