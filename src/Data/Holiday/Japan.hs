@@ -84,8 +84,11 @@ isHoliday = isJust . holiday
 -- >>> holiday $ fromGregorian 2015 12 8
 -- Nothing
 holiday :: Day -> Maybe Holiday
-holiday day | day < enforcement = Nothing
-holiday day = case toGregorian day of
+holiday = makeUp standardHoliday
+
+standardHoliday :: Day -> Maybe Holiday
+standardHoliday day | day < enforcement = Nothing
+standardHoliday day = case toGregorian day of
   (_, 1, 1) -> Just D元日
   (y, 1, _)
     | y >= 2000 && isNthMonday 2 day -> Just D成人の日
@@ -110,8 +113,6 @@ holiday day = case toGregorian day of
     | y >= 2007 -> Just Dみどりの日
     | y >= 1986 && not (isSunday day) && not (isMonday day) -> Just D国民の休日
   (_, 5, 5) -> Just Dこどもの日
-  (y, 5, 6)
-    | y >= 2007 && (isTuesday day || isWednesday day) -> Just D振替休日
   (1993, 6, 9) -> Just D皇太子徳仁親王の結婚の儀
   (2020, 7, 23) -> Just D海の日
   (2020, 7, 24) -> Just Dスポーツの日
@@ -149,8 +150,22 @@ holiday day = case toGregorian day of
   (1990, 11, 12) -> Just D即位礼正殿の儀
   (y, 12, 23)
     | y >= 1989 && y <= 2018 -> Just D天皇誕生日
-  _ | day >= enforcementOfMakeUpDay && isMonday day && isHoliday (pred day) -> Just D振替休日
   _ -> Nothing
+
+-- |
+-- [昭和48年法律第10号 国民の祝日に関する法律の一部を改正する法律](http://www.shugiin.go.jp/Internet/itdb_housei.nsf/html/houritsu/07119730412010.htm)
+-- [平成17年法律第43号 国民の祝日に関する法律の一部を改正する法律](http://www.shugiin.go.jp/Internet/itdb_housei.nsf/html/housei/16220050520043.htm)
+-- 平成17年改正後のルールはそれ以前のルールを包含する
+makeUp :: (Day -> Maybe Holiday) -> Day -> Maybe Holiday
+makeUp holiday' day
+  | isHoliday' day                       = holiday' day
+  | day < enforcementOfMakeUpDay         = Nothing
+  | continuousPreviousSundayHolidayExist = Just D振替休日
+  | otherwise                            = Nothing
+  where
+    isHoliday' = isJust . holiday'
+    continuousPreviousSundayHolidayExist =
+      any isSunday $ takeWhile isHoliday' $ iterate pred $ pred day
 
 enforcement :: Day
 enforcement = fromGregorian 1948 7 20
@@ -161,11 +176,10 @@ enforcementOfMakeUpDay = fromGregorian 1973 4 12
 third :: (a, b, c) -> c
 third (_, _, x) = x
 
-isMonday, isTuesday, isWednesday, isSunday :: Day -> Bool
-isMonday    = (== 1) . third . toWeekDate
-isTuesday   = (== 2) . third . toWeekDate
-isWednesday = (== 3) . third . toWeekDate
-isSunday    = (== 7) . third . toWeekDate
+isMonday, isTuesday, isSunday :: Day -> Bool
+isMonday  = (== 1) . third . toWeekDate
+isTuesday = (== 2) . third . toWeekDate
+isSunday  = (== 7) . third . toWeekDate
 
 isNthWeekOfMonth :: Int -> Int -> Bool
 isNthWeekOfMonth n dayOfMonth = (dayOfMonth - 1) `div` 7 + 1 == n
