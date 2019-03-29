@@ -88,7 +88,7 @@ isHoliday = isJust . holiday
 -- Nothing
 holiday :: Day -> Maybe Holiday
 holiday d | d < enforcement = Nothing
-holiday d = getFirst $ (standardHoliday <> makeUp) d
+holiday d = getFirst $ (standardHoliday <> makeUp <> turnOver) d
 
 enforcement :: Day
 enforcement = fromGregorian 1948 7 20
@@ -102,12 +102,25 @@ type Definition = Day -> First Holiday
 makeUp :: Definition
 makeUp = D振替休日 @@ sinceDay enforcementOfMakeUpDay <> continuousPreviousSundayHolidayExist
   where
-    isStandardHoliday = isJust . getFirst . standardHoliday
     continuousPreviousSundayHolidayExist =
       All . any isSunday . takeWhile isStandardHoliday . iterate pred . pred
 
 enforcementOfMakeUpDay :: Day
 enforcementOfMakeUpDay = fromGregorian 1973 4 12
+
+-- | [昭和60年法律第103号 国民の祝日に関する法律の一部を改正する法律](http://www.shugiin.go.jp/Internet/itdb_housei.nsf/html/houritsu/10319851227103.htm)
+turnOver :: Definition
+turnOver =
+  D国民の休日 @@ sinceDay enforcementOfTurnOver <> notP sunday <> afterHoliday <> beforeHoliday
+  where
+    afterHoliday = All . isStandardHoliday . pred
+    beforeHoliday = All . isStandardHoliday . succ
+
+enforcementOfTurnOver :: Day
+enforcementOfTurnOver = fromGregorian 1985 12 27
+
+isStandardHoliday :: Day -> Bool
+isStandardHoliday = isJust . getFirst . standardHoliday
 
 standardHoliday :: Definition
 standardHoliday =
@@ -123,12 +136,9 @@ standardHoliday =
     , D昭和の日 @@ since 2007 <> month 4 <> day 29
     , Dみどりの日 @@ since 1989 <> month 4 <> day 29
     , D天皇誕生日 @@ month 4 <> day 29
-    , D国民の休日 @@ year 2019 <> month 4 <> day 30
     , D即位の日 @@ year 2019 <> month 5 <> day 1
-    , D国民の休日 @@ year 2019 <> month 5 <> day 2
     , D憲法記念日 @@ month 5 <> day 3
     , Dみどりの日 @@ since 2007 <> month 5 <> day 4
-    , D国民の休日 @@ since 1986 <> month 5 <> day 4 <> notP sunday <> notP monday
     , Dこどもの日 @@ month 5 <> day 5
     , D皇太子徳仁親王の結婚の儀 @@ year 1993 <> month 6 <> day 9
     , D海の日 @@ year 2020 <> month 7 <> day 23
@@ -140,7 +150,6 @@ standardHoliday =
     , D秋分の日 @@ month 9 <> autumnalEquinoxDay
     , D敬老の日 @@ since 2003 <> month 9 <> nth 3 monday
     , D敬老の日 @@ since 1966 <> notP (since 2003) <> month 9 <> day 15
-    , D国民の休日 @@ tuesday <> join (day . pred . autumnalEquinox . gregorianYear)
     , D即位礼正殿の儀 @@ year 2019 <> month 10 <> day 22
     , Dスポーツの日 @@ since 2021 <> month 10 <> nth 2 monday
     , D体育の日 @@ since 2000 <> notP (year 2020) <> month 10 <> nth 2 monday
@@ -181,10 +190,9 @@ sinceDay d = All . (>= d)
 notP :: Predicate -> Predicate
 notP p = All . not . getAll . p
 
-sunday, monday, tuesday :: Predicate
+sunday, monday :: Predicate
 sunday = All . isSunday
 monday = All . isMonday
-tuesday = All . isTuesday
 
 nth :: Int -> Predicate -> Predicate
 nth n p = p <> All . isNthWeekOfMonth n . gregorianDay
@@ -210,10 +218,9 @@ second3 (_, x, _) = x
 third3 :: (a, b, c) -> c
 third3 (_, _, x) = x
 
-isMonday, isTuesday, isSunday :: Day -> Bool
-isMonday  = (== 1) . third3 . toWeekDate
-isTuesday = (== 2) . third3 . toWeekDate
-isSunday  = (== 7) . third3 . toWeekDate
+isMonday, isSunday :: Day -> Bool
+isMonday = (== 1) . third3 . toWeekDate
+isSunday = (== 7) . third3 . toWeekDate
 
 isNthWeekOfMonth :: Int -> Int -> Bool
 isNthWeekOfMonth n dayOfMonth = (dayOfMonth - 1) `div` 7 + 1 == n
