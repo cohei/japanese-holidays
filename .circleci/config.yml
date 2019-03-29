@@ -10,7 +10,7 @@ jobs:
           keys:
             - libraries-{{ checksum "package.yaml" }}
             - libraries
-      - run: cabal new-update && cabal new-install hpack
+      - run: cabal new-update && cabal new-install --overwrite-policy=always hpack
       - run: hpack && HSPEC_OPTIONS=--color cabal new-test
       - save_cache:
           key: libraries-{{ checksum "package.yaml" }}
