@@ -1,6 +1,7 @@
 # Japanese Holidays
 
 [![Hackage](https://img.shields.io/hackage/v/japanese-holidays.svg?style=flat-square)](https://hackage.haskell.org/package/japanese-holidays)
+[![Hackage CI](https://matrix.hackage.haskell.org/api/v2/packages/japanese-holidays/badge)](https://matrix.hackage.haskell.org/package/japanese-holidays)
 [![CircleCI](https://img.shields.io/circleci/project/github/cohei/japanese-holidays.svg?style=flat-square)](https://circleci.com/gh/cohei/japanese-holidays)
 
 ある日付が、どの日本の祝日にあたるかを判定します。 [AddinBox / 祝日判定ロジック](http://addinbox.sakura.ne.jp/holiday_logic.htm) を Haskell へ移植しました。
