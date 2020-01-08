@@ -3,15 +3,15 @@ jobs:
   build:
     working_directory: "~/work"
     docker:
-      - image: haskell:8.6.3
+      - image: haskell:8.8.1
     steps:
       - checkout
       - restore_cache:
           keys:
             - libraries-{{ checksum "japanese-holidays.cabal" }}
             - libraries
-      - run: cabal new-update
-      - run: HSPEC_OPTIONS=--color cabal new-test
+      - run: cabal update
+      - run: HSPEC_OPTIONS=--color cabal test
       - save_cache:
           key: libraries-{{ checksum "japanese-holidays.cabal" }}
           paths:
