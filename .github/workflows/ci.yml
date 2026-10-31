@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6.0.2
-      - uses: haskell-actions/setup@v2.10.3
+      - uses: haskell-actions/setup@v2.12.1
       - run: cabal test
         env:
           HSPEC_OPTIONS: --color
